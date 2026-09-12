@@ -1,10 +1,8 @@
 package com.example.FirstProject.Service;
 
-import com.example.FirstProject.Controllers.JournalControllerV2;
 import com.example.FirstProject.Entity.Journal;
 import com.example.FirstProject.Entity.User;
 import com.example.FirstProject.repository.UsersRepository;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.bson.types.ObjectId;
@@ -18,8 +16,6 @@ public class UserService {
 
     @Autowired
     private UsersRepository  usersRepository;
-
-
 
     private final static Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -54,4 +50,9 @@ public class UserService {
         usersRepository.save(user);
     }
 
+    public void changeEmailOptStatus(String username, boolean flag) {
+        User user = usersRepository.getUserByUsername(username);
+        user.setEmailOptIn(flag);
+        usersRepository.save(user);
+    }
 }

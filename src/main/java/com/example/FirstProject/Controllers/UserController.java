@@ -58,7 +58,12 @@ public class UserController {
 
     @GetMapping("showCitiesStatus")
     public String showCities(){
-        weatherService.showWeatherInBulk(new String[]{"Mumbai", "Delhi", "Calcutta"});
-        return "greetings";
+        return weatherService.showWeatherInBulk(new String[]{"Mumbai", "Delhi", "Calcutta"});
+    }
+
+    @GetMapping("{username}/emailOpt")
+    public String emailOpt(@PathVariable String username ,@RequestBody boolean flag){
+        userService.changeEmailOptStatus(username, flag);
+        return "Changed to :" + flag;
     }
 }
