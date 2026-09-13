@@ -3,6 +3,7 @@ package com.example.FirstProject.Service;
 import com.example.FirstProject.Entity.Journal;
 import com.example.FirstProject.Entity.User;
 import com.example.FirstProject.repository.UsersRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.bson.types.ObjectId;
@@ -28,6 +29,7 @@ public class UserService {
     public User addNewUser(User user) {
 //        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(List.of("User"));
+        user.setJournalList(new ArrayList<>());
         return usersRepository.save(user);
     }
 

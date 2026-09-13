@@ -30,9 +30,6 @@ public class JournalControllerV2 {
     @GetMapping("{username}")
     public ResponseEntity<List<Journal>> getJournal(@PathVariable String username) {
         List<Journal> allEntries = journalService.findAll(username);
-        if(allEntries.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(allEntries, HttpStatus.OK);
     }
 
@@ -47,9 +44,8 @@ public class JournalControllerV2 {
     @PostMapping("{username}")
     public ResponseEntity<Journal> postJournal(@PathVariable String username, @RequestBody Journal journal) {
         try {
-            journal.setDate(LocalDateTime.now());
-            journalService.saveEntry(username, journal);
-            return new ResponseEntity<>(journal, HttpStatus.CREATED);
+            Journal savedJournal = journalService.saveEntry(username, journal);
+            return new ResponseEntity<>(savedJournal, HttpStatus.CREATED);
         } catch (Exception e) {
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

@@ -2,7 +2,9 @@ package com.example.FirstProject.Service;
 
 import com.example.FirstProject.Entity.Journal;
 import com.example.FirstProject.Entity.User;
+import com.example.FirstProject.Enums.SentimentEnum;
 import com.example.FirstProject.repository.JournalRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +24,15 @@ public class JournalService {
     private UserService usersService;
 
     @Transactional
-    public void saveEntry(String username, Journal journal) {
+    public Journal saveEntry(String username, Journal journal) {
         try {
+            journal.setDate(LocalDateTime.now());
+            if(journal.getSentiment()==null) {
+                journal.setSentiment(SentimentEnum.None);
+            }
             Journal savedJournal = journalRepository.save(journal);
             usersService.addJournal(username, savedJournal);
+            return savedJournal;
         } catch (Exception e) {
             log.error("Journal: {} could not be saved: ", journal, e);
             throw new RuntimeException("Journal could not be saved");

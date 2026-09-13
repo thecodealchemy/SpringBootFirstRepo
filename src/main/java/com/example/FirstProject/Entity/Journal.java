@@ -1,5 +1,6 @@
 package com.example.FirstProject.Entity;
 
+import com.example.FirstProject.Enums.SentimentEnum;
 import java.time.LocalDateTime;
 import jdk.jfr.StackTrace;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("Journal_Entries")
+@Document("journals")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @ToString @EqualsAndHashCode // @Data --> contains all these!
 @Data
@@ -25,4 +26,5 @@ public class Journal {
     private String name;
     private String content;
     private LocalDateTime date;
+    private SentimentEnum sentiment;
 }

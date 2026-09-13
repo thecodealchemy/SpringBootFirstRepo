@@ -64,6 +64,6 @@ public class UserController {
     @GetMapping("{username}/emailOpt")
     public String emailOpt(@PathVariable String username ,@RequestBody boolean flag){
         userService.changeEmailOptStatus(username, flag);
-        return "Changed to :" + flag;
+        return "Email Opted for :" + flag;
     }
 }

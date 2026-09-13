@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @Slf4j
 public class WeatherService {
+
     @Value("${weather_service_api_key}")
     private String apiKey;
 
@@ -29,21 +30,30 @@ public class WeatherService {
     @Autowired
     private AppCache appCache;
 
-    public WeatherApiResponse getWeather(String city){
-        String finalUrl = appCache.APP_CACHE.get("weather_service_api_url").replace("API_KEY", apiKey) + "&q=" + city;
-        ResponseEntity<WeatherApiResponse> response = restTemplate.exchange(finalUrl, HttpMethod.GET, null, WeatherApiResponse.class);
-        if(response.getStatusCode().is2xxSuccessful()){
-            log.info("Weather Response Status Code : {} and Body: {}", response.getStatusCode(), response.getBody());
-            return response.getBody();
+    @Autowired
+    private RedisService redisService;
+
+    public WeatherApiResponse getWeather(String city) {
+        WeatherApiResponse cacheResp = redisService.get(city, WeatherApiResponse.class);
+        if (cacheResp != null) {
+            return cacheResp;
         }
-        else{
-            log.error("Weather Response Status Code : {} and Message: {}", response.getStatusCode(),  response.getBody());
+        String finalUrl = appCache.APP_CACHE.get("weather_service_api_url").replace("API_KEY", apiKey) + "&q=" + city;
+        ResponseEntity<WeatherApiResponse> response = restTemplate.exchange(finalUrl, HttpMethod.GET, null,
+                WeatherApiResponse.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            log.info("Weather Response Status Code : {} and Body: {}", response.getStatusCode(), response.getBody());
+            redisService.put(city, response.getBody(), 60);
+            return response.getBody();
+        } else {
+            log.error("Weather Response Status Code : {} and Message: {}", response.getStatusCode(),
+                    response.getBody());
             return null;
         }
     }
 
 
-    public String showWeatherInBulk(String[] cities){
+    public String showWeatherInBulk(String[] cities) {
         String finalUrl = appCache.APP_CACHE.get("weather_service_api_url").replace("API_KEY", apiKey) + "&q=bulk";
         List<Location> locations = new ArrayList<>();
 

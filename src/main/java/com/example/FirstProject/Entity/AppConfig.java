@@ -3,7 +3,7 @@ package com.example.FirstProject.Entity;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("config_journal_app")
+@Document("configs")
 @Data
 public class AppConfig {
     private String key;
